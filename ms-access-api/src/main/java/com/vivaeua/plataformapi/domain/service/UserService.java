@@ -47,19 +47,6 @@ public class UserService {
     }
 
 
-    public boolean validateEmail(String email) {
-        // Expressão regular para validar um email
-        String regex = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,}$";
-
-        // Compila a regex em um padrão (Pattern)
-        Pattern pattern = Pattern.compile(regex);
-
-        // Cria um objeto Matcher para aplicar a regex ao email
-        Matcher matcher = pattern.matcher(email);
-
-        // Verifica se o email corresponde à regex
-        return matcher.matches();
-    }
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -96,14 +83,28 @@ public class UserService {
 
     public User editPassword(Long id, String currentpassword, String newPassword, String confirmPassword) throws Exception {
         if(!newPassword.equals(confirmPassword)){
-            throw new RuntimeException("Nova senha não confere com confirmação de senha.");
+            throw new RuntimeException("New password does not match password confirmation");
         }
         User user = findById(id);
         if (!user.getPassword().equals(currentpassword)){
-            throw new RuntimeException("Sua senha não está correta.");
+            throw new RuntimeException("Your password is not correct.");
         }
         user.setPassword(newPassword);
         userRepository.save(user);
         return user;
+    }
+
+    public boolean validateEmail(String email) {
+        // Expressão regular para validar um email
+        String regex = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,}$";
+
+        // Compila a regex em um padrão (Pattern)
+        Pattern pattern = Pattern.compile(regex);
+
+        // Cria um objeto Matcher para aplicar a regex ao email
+        Matcher matcher = pattern.matcher(email);
+
+        // Verifica se o email corresponde à regex
+        return matcher.matches();
     }
 }

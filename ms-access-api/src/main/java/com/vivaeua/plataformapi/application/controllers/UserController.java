@@ -6,6 +6,7 @@ import com.vivaeua.plataformapi.application.dto.UserResponseDto;
 import com.vivaeua.plataformapi.application.dto.mapper.UserMapper;
 import com.vivaeua.plataformapi.domain.entity.User;
 import com.vivaeua.plataformapi.domain.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<String> create(@Valid @RequestBody UserRequestDto userRequestDto) {
         try {
             User user = UserMapper.INSTANCE.userRequestDtoToUser(userRequestDto);
             this.userService.create(user);
@@ -69,7 +70,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserRequestDto userRequestDto) throws Exception {
+    public ResponseEntity<Void> update(@Valid @PathVariable Long id, @RequestBody UserRequestDto userRequestDto) throws Exception {
         try {
             User user = UserMapper.INSTANCE.userRequestDtoToUser(userRequestDto);
             userService.update(id, user);
@@ -112,8 +113,9 @@ public class UserController {
 
     @PatchMapping("/password/{id}")
     public ResponseEntity<Void> updatePassword(
-            @PathVariable Long id, @RequestBody UserPasswordDto userPasswordDto) throws Exception {
+             @PathVariable Long id, @Valid @RequestBody UserPasswordDto userPasswordDto) throws Exception {
         try {
+
             User user =userService.editPassword( id,
                     userPasswordDto.getCurrentpassword(),
                     userPasswordDto.getNewPassword(),
