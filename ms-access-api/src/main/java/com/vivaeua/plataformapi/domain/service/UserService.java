@@ -77,7 +77,6 @@ public class UserService {
 
 
     public User saveUser(User user) {
-
         return userRepository.save(user);
     }
 
@@ -106,5 +105,15 @@ public class UserService {
 
         // Verifica se o email corresponde à regex
         return matcher.matches();
+    }
+
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException(String.format("Username Not Found" +username)));
+    }
+
+    public User.Role findRoleForUsername(String username) {
+        return userRepository.findRoleByUsername(username);
     }
 }
