@@ -32,7 +32,7 @@ public class UserService {
 
     public User findById(Long id) throws Exception {
        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(String.format("User not found" +id)));
     }
 
     public User findByEmail(String email) throws Exception {
