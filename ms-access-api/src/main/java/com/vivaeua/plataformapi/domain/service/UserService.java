@@ -4,6 +4,7 @@ import com.vivaeua.plataformapi.domain.entity.User;
 import com.vivaeua.plataformapi.infra.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class UserService {
 
     @Autowired
     private  UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     public User create(User user) throws Exception {
         if(!validateEmail(user.getEmail())){
@@ -25,6 +27,7 @@ public class UserService {
         if (userAlreadyExists != null ) {
             throw new Exception("This user already exists.");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         this.userRepository.save(user);
         return user;
     }
@@ -85,10 +88,10 @@ public class UserService {
             throw new RuntimeException("New password does not match password confirmation");
         }
         User user = findById(id);
-        if (!user.getPassword().equals(currentpassword)){
+        if (!passwordEncoder.matches(currentpassword, user.getPassword())){
             throw new RuntimeException("Your password is not correct.");
         }
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return user;
     }
